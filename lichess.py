@@ -6,7 +6,7 @@ import os
 
 cur_dir = os.getcwd()
 
-conn = sqlite3.connect('chess_rating_1.db')
+conn = sqlite3.connect('chess_rating.db')
 
 c = conn.cursor()
 
