@@ -12,13 +12,13 @@ conn = sqlite3.connect('chess_rating.db')
 
 c = conn.cursor()
 
-# c.execute("""CREATE TABLE rating (
-#             Name text,
-#             Bullet text,
-#             Blitz text,
-#             Rapid text,
-#             Date text
-#             )""")
+c.execute("""CREATE TABLE rating (
+            Name text,
+            Bullet text,
+            Blitz text,
+            Rapid text,
+            Date text
+            )""")
 
 Jack_link = 'https://lichess.org/@/Evgeniy1989'
 Ivan_link = 'https://lichess.org/@/Pyrog_Ivan'
