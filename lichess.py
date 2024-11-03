@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import requests
 import sqlite3
 from datetime import date
+from typing import Dict
 
 conn = sqlite3.connect('chess_rating.db')
 
@@ -22,8 +23,9 @@ c.execute(SQL_CREATE_TABLE)
 players = ['Evgeniy1989', 'Pyrog_Ivan']
 
 
-def get_rating(source, nick):
-    name = {'nickname': nick}
+def get_rating(source, nick:str) -> Dict:
+    """Parse lichess.com for 1 player and return data in dict"""
+    name = {'nickname': nick, 'Bullet': None, 'Blitz': None, 'Rapid': None}
     soup = BeautifulSoup(source, 'lxml')
     article = soup.find_all('span')
     for art in article:
@@ -37,10 +39,19 @@ def get_rating(source, nick):
     return name
 
 
-def insert_data(data):
+def insert_data(data: Dict):
+    """Insert collected data to DB"""
     with conn:
-        c.execute(f'INSERT INTO rating VALUES (:Name, :Bullet, :Blitz, :Rapid, :Date)',
-           {'Name': name_data['nickname'], 'Bullet': name_data['Bullet'], 'Blitz': name_data['Blitz'],'Rapid': name_data['Rapid'], 'Date': date.today()})
+        c.execute(
+            'INSERT INTO rating VALUES (:Name, :Bullet, :Blitz, :Rapid, :Date)',
+           {
+               'Name': name_data['nickname'],
+               'Bullet': name_data['Bullet'],
+               'Blitz': name_data['Blitz'],
+               'Rapid': name_data['Rapid'],
+               'Date': date.today()
+                        }
+                        )
 
 
 for player in players:
