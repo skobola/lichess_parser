@@ -20,7 +20,7 @@ SQL_CREATE_TABLE = """CREATE TABLE IF NOT EXISTS rating (
 
 c.execute(SQL_CREATE_TABLE)
 
-players = ['Evgeniy1989', 'Pyrog_Ivan']
+PLAYERS = ('Evgeniy1989', 'Pyrog_Ivan')
 
 
 def get_rating(source, nick:str) -> Dict:
@@ -39,25 +39,25 @@ def get_rating(source, nick:str) -> Dict:
     return name
 
 
-def insert_data(data: Dict):
+def insert_rating(player_dict: Dict):
     """Insert collected data to DB"""
     with conn:
         c.execute(
             'INSERT INTO rating VALUES (:Name, :Bullet, :Blitz, :Rapid, :Date)',
            {
-               'Name': name_data['nickname'],
-               'Bullet': name_data['Bullet'],
-               'Blitz': name_data['Blitz'],
-               'Rapid': name_data['Rapid'],
+               'Name': player_dict['nickname'],
+               'Bullet': player_dict['Bullet'],
+               'Blitz': player_dict['Blitz'],
+               'Rapid': player_dict['Rapid'],
                'Date': date.today()
                         }
                         )
 
 
-for player in players:
+for player in PLAYERS:
     url = f'https://lichess.org/@/{player}'
     r = requests.get(url).text
     name_data = get_rating(r, player)
-    insert_data(name_data)
+    insert_rating(name_data)
 
 conn.close()
