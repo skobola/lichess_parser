@@ -36,7 +36,7 @@ def get_rating(source, name):
 
     soup = BeautifulSoup(source, 'lxml')
 
-    article = soup.find_all('span')git g
+    article = soup.find_all('span')
     nickname = name
     name = {}
     for art in article:
