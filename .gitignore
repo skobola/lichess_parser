@@ -1,3 +1,5 @@
 /venv
 snippet.txt
 chess_rating.db
+chess_new.db
+ __pycache__/
