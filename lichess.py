@@ -4,62 +4,49 @@ from bs4 import BeautifulSoup
 import requests
 import sqlite3
 from datetime import date
-import os
-
-cur_dir = os.getcwd()
 
 conn = sqlite3.connect('chess_rating.db')
 
 c = conn.cursor()
 
-c.execute("""CREATE TABLE IF NOT EXISTS rating (
-            Name text,
-            Bullet text,
-            Blitz text,
-            Rapid text,
-            Date text
-            )""")
+SQL_CREATE_TABLE = """CREATE TABLE IF NOT EXISTS rating (
+                    Name text,
+                    Bullet text,
+                    Blitz text,
+                    Rapid text,
+                    Date text
+                    )"""
 
-Jack_link = 'https://lichess.org/@/Evgeniy1989'
-Ivan_link = 'https://lichess.org/@/Pyrog_Ivan'
+c.execute(SQL_CREATE_TABLE)
 
-Jack_nick = Jack_link.split('/')[-1]
-Ivan_nick = Ivan_link.split('/')[-1]
+players = ['Evgeniy1989', 'Pyrog_Ivan']
 
 
-
-source_jack = requests.get(Jack_link).text
-source_ivan = requests.get(Ivan_link).text
-
-
-def get_rating(source, name):
-
+def get_rating(source, nick):
+    name = {'nickname': nick}
     soup = BeautifulSoup(source, 'lxml')
-
     article = soup.find_all('span')
-    nickname = name
-    name = {}
     for art in article:
         if art.span:
             try:
-                rating = (art.rating.strong.text).replace('?', '')
-                name[f'{(art.h3.text)}'] = f'{rating}'
+                ratio = art.rating.strong.text.replace('?', "")
+                ratio = int(ratio) if ratio else None
+                name[f'{art.h3.text}'] = f'{ratio}'
             except Exception as e:
                 print(e)
-    name['nickname'] = f'{nickname}'
     return name
 
 
-Jack = get_rating(source_jack, Jack_nick)
-Ivan = get_rating(source_ivan, Ivan_nick)
-
-def insert_data(name):
+def insert_data(data):
     with conn:
         c.execute(f'INSERT INTO rating VALUES (:Name, :Bullet, :Blitz, :Rapid, :Date)',
-           {'Name': name['nickname'], 'Bullet': name['Bullet'], 'Blitz': name['Blitz'],'Rapid': name['Rapid'], 'Date': date.today()})
+           {'Name': name_data['nickname'], 'Bullet': name_data['Bullet'], 'Blitz': name_data['Blitz'],'Rapid': name_data['Rapid'], 'Date': date.today()})
 
 
-insert_data(Jack)
-insert_data(Ivan)
+for player in players:
+    url = f'https://lichess.org/@/{player}'
+    r = requests.get(url).text
+    name_data = get_rating(r, player)
+    insert_data(name_data)
 
 conn.close()
