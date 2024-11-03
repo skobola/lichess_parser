@@ -12,7 +12,7 @@ conn = sqlite3.connect('chess_rating.db')
 
 c = conn.cursor()
 
-c.execute("""CREATE TABLE rating (
+c.execute("""CREATE TABLE IF NOT EXISTS rating (
             Name text,
             Bullet text,
             Blitz text,
@@ -24,7 +24,7 @@ Jack_link = 'https://lichess.org/@/Evgeniy1989'
 Ivan_link = 'https://lichess.org/@/Pyrog_Ivan'
 
 Jack_nick = Jack_link.split('/')[-1]
-Ivan_nink = Ivan_link.split('/')[-1]
+Ivan_nick = Ivan_link.split('/')[-1]
 
 
 
@@ -36,7 +36,7 @@ def get_rating(source, name):
 
     soup = BeautifulSoup(source, 'lxml')
 
-    article = soup.find_all('span')
+    article = soup.find_all('span')git g
     nickname = name
     name = {}
     for art in article:
@@ -51,7 +51,7 @@ def get_rating(source, name):
 
 
 Jack = get_rating(source_jack, Jack_nick)
-Ivan = get_rating(source_ivan, Ivan_nink)
+Ivan = get_rating(source_ivan, Ivan_nick)
 
 def insert_data(name):
     with conn:
