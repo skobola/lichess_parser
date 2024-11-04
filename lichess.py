@@ -20,7 +20,7 @@ SQL_CREATE_TABLE = """CREATE TABLE IF NOT EXISTS rating (
 
 c.execute(SQL_CREATE_TABLE)
 
-PLAYERS = ('Evgeniy1989', 'Pyrog_Ivan')
+PLAYERS = ('Evgeniy1989', 'Pyrog_Ivan', 'Viposha')
 
 
 def get_rating(source, nick:str) -> Dict:
