@@ -164,7 +164,7 @@ async def handle_rating_selection(callback_query: CallbackQuery):
     plt.title(f'{rating_type} rating of {player_name}')
 
     # Save the plot as a file on disk
-    file_path = '../chessbot/bullet_rating.png'
+    file_path = 'bullet_rating.png'
     plt.savefig(file_path)  # Save the figure to a file
 
     # Send the saved plot as a photo (file)
