@@ -81,9 +81,9 @@ def get_rating_by_name_and_type(player_name, rating_type):
     return rows
 
 
-# Command handler for /test to ask user to choose a player name
-@dp.message(Command("test"))
-async def test_command_handler(message: Message):
+# Command handler for /graph to ask user to choose a player name
+@dp.message(Command("graph"))
+async def graph_command_handler(message: Message):
     # Create inline keyboard with player names
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[[InlineKeyboardButton(text=player, callback_data=f"select_player_{player}")] for player in
@@ -122,7 +122,7 @@ async def handle_rating_selection(callback_query: CallbackQuery):
 
     # If the player name is not found, send an error message
     if not player_name:
-        await callback_query.message.answer("Error: Player name not found. Please start over by using /test.")
+        await callback_query.message.answer("Error: Player name not found. Please start over by using /graph.")
         return
 
     # Query the database for the selected name and rating type
@@ -179,8 +179,6 @@ async def handle_rating_selection(callback_query: CallbackQuery):
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message):
     await message.answer("Hello, chess boys!")
-
-
 
 
 @dp.message(Command("live"))
